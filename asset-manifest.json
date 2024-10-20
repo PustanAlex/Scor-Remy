@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/Scor-Remy/static/css/main.b0df421d.css",
-    "main.js": "/Scor-Remy/static/js/main.5a1a2098.js",
+    "main.css": "/Scor-Remy/static/css/main.c45f44e1.css",
+    "main.js": "/Scor-Remy/static/js/main.ad8a5681.js",
     "index.html": "/Scor-Remy/index.html",
-    "main.b0df421d.css.map": "/Scor-Remy/static/css/main.b0df421d.css.map",
-    "main.5a1a2098.js.map": "/Scor-Remy/static/js/main.5a1a2098.js.map"
+    "main.c45f44e1.css.map": "/Scor-Remy/static/css/main.c45f44e1.css.map",
+    "main.ad8a5681.js.map": "/Scor-Remy/static/js/main.ad8a5681.js.map"
   },
   "entrypoints": [
-    "static/css/main.b0df421d.css",
-    "static/js/main.5a1a2098.js"
+    "static/css/main.c45f44e1.css",
+    "static/js/main.ad8a5681.js"
   ]
 }
