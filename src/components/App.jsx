@@ -14,6 +14,7 @@ const App = () => {
   const [confirmClearModal, setConfirmClearModal] = useState(false);
   const [confirmRemoveModal, setConfirmRemoveModal] = useState(false);
   const [removeIndex, setRemoveIndex] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(''); // Mesaj de eroare
 
   useEffect(() => {
     localStorage.setItem('players', JSON.stringify(players));
@@ -26,19 +27,6 @@ const App = () => {
       newPlayers[index].score = value;
       setPlayers(newPlayers);
     }
-  };
-
-  const handleAddScore = (index) => {
-    const newPlayers = [...players];
-    let scoreToAdd = parseInt(newPlayers[index].score.split(' (')[0], 10) || 0;
-    if (newPlayers[index].atu) {
-      scoreToAdd += 50;
-    }
-    newPlayers[index].total += scoreToAdd;
-    newPlayers[index].history.push({ score: scoreToAdd, atu: newPlayers[index].atu });
-    newPlayers[index].score = '';
-    newPlayers[index].atu = false;
-    setPlayers(newPlayers);
   };
 
   const handleRestore = (index) => {
@@ -119,9 +107,40 @@ const App = () => {
     closeConfirmClearModal();
   };
 
+  const calculateScores = () => {
+    const newPlayers = [...players];
+
+    // Verificăm dacă toți jucătorii au un scor valid sau atu activat
+    const allValid = newPlayers.every(player => 
+      player.score.trim() !== '' || player.atu
+    );
+
+    if (!allValid) {
+      // Alertă dacă nu toate inputurile sunt completate
+      window.alert('Toți jucătorii trebuie să aibă un scor valid sau să aibă bonusul Atu activat.'); // Afișează alertă
+      return; // Oprește execuția funcției
+    }
+
+    // Resetăm mesajul de eroare
+    setErrorMessage('');
+
+    newPlayers.forEach((player) => {
+      const scoreValue = parseInt(player.score.split(' (')[0], 10) || 0; // Obține scorul din input
+      if (!isNaN(scoreValue)) { // Verifică dacă scorul este un număr
+        player.total += player.atu ? scoreValue + 50 : scoreValue; // Adaugă bonusul de atu dacă este cazul
+        player.history.push({ score: scoreValue, atu: player.atu });
+        player.score = ''; // Resetează inputul de scor
+        player.atu = false; // Resetează bonusul de atu
+      }
+    });
+    setPlayers(newPlayers);
+  };
+
   return (
     <div className="container">
       <h1>Remy Score Tracker</h1>
+
+      {errorMessage && <div className="error-message">{errorMessage}</div>} {/* Afișăm mesajul de eroare */}
 
       {players.length === 0 ? (
         <div className="empty-message">
@@ -150,7 +169,6 @@ const App = () => {
               <button onClick={() => handleRestore(index)} className="restore-btn">
                 <FaUndo style={{ fontSize: '20px' }} />
               </button>
-              <button onClick={() => handleAddScore(index)} className="add-score-btn">Add Score</button>
             </div>
             <h3>
               Total: {player.total}
@@ -162,9 +180,10 @@ const App = () => {
         ))
       )}
 
+      <button onClick={calculateScores} className="calculate-scores-btn">Calculate Score</button> {/* Butonul Calculate Score */}
       <button onClick={addPlayer} className="add-player-btn">Add Player</button>
-      <button onClick={openConfirmClearModal} className="clear-all-btn">Clean All</button>
       <button onClick={clearAllScores} className="clean-all-scores-btn">Clean All Scores</button>
+      <button onClick={openConfirmClearModal} className="clear-all-btn">Clean All</button>
 
       {modalVisible && (
         <div className="modal">
