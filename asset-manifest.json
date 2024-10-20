@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Scor-Remy/static/css/main.2dc499ed.css",
+    "main.js": "/Scor-Remy/static/js/main.5dfb1a7a.js",
+    "index.html": "/Scor-Remy/index.html",
+    "main.2dc499ed.css.map": "/Scor-Remy/static/css/main.2dc499ed.css.map",
+    "main.5dfb1a7a.js.map": "/Scor-Remy/static/js/main.5dfb1a7a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2dc499ed.css",
+    "static/js/main.5dfb1a7a.js"
+  ]
+}
