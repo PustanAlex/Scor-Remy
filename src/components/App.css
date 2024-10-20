@@ -1,4 +1,5 @@
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
@@ -9,41 +10,39 @@ body, html {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 10px;
 }
 
 h1 {
-    font-size: 24px;
+    font-size: 20px;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .player-input {
     display: flex;
     flex-direction: column;
-    width: 100%; /* Full width */
-    max-width: 300px; /* Limit max width */
-    margin-bottom: 15px;
-    padding: 15px; /* Increased padding for better spacing */
-    border: 1px solid #ddd; /* Card border */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for depth */
-    background-color: #f9f9f9; /* Light background */
-    box-sizing: border-box; /* Ensure padding is included in width */
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    position: relative;
 }
 
 .score-container {
-    position: relative;
-    display: inline-block;
-    width: 100%; /* Ensure it takes full width */
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
 }
 
 .bonus-text {
     color: red;
-    position: absolute;
-    left: calc(100% + 10px);
-    top: 50%;
-    transform: translateY(-50%);
     font-weight: bold;
     font-size: 0.8em;
     white-space: nowrap;
@@ -53,14 +52,18 @@ h1 {
 .score-input {
     padding: 8px;
     font-size: 14px;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 100%; /* Full width to fit card */
-    box-sizing: border-box; /* Ensure padding is included in width */
+    width: calc(100% - 20px);
+    box-sizing: border-box;
+}
+
+.name-input {
+    width: 100%; /* Ajustăm lățimea */
 }
 
 .score-input {
+    margin-right: 5px;
     -moz-appearance: textfield;
 }
 
@@ -73,17 +76,19 @@ h1 {
 .button-group {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
-.add-score-btn, .restore-btn, .atuu-btn {
+.add-score-btn,
+.restore-btn,
+.atuu-btn {
     padding: 8px;
-    font-size: 14px;
+    font-size: 12px;
     border: none;
     color: white;
     border-radius: 5px;
     cursor: pointer;
-    width: 30%; /* Flexible button width */
+    width: 30%;
 }
 
 .add-score-btn {
@@ -98,36 +103,31 @@ h1 {
     background-color: #17a2b8;
 }
 
+.modal-button-group {
+    display: flex;
+    flex-direction: row;
+    gap: 10px; /* Spațiu între butoane */
+    justify-content: center; /* Asigură centrul */
+    align-items: center;
+    margin-top: 10px;
+}
+
 .atuu-btn.active {
     background-color: #138496;
     transform: scale(0.95);
 }
 
-.atuu-btn:hover {
-    background-color: #138496;
-}
-
-.history-btn {
-    padding: 8px;
+.add-player-btn,
+.clear-all-btn {
+    padding: 10px;
     font-size: 14px;
     border: none;
-    background-color: #17a2b8;
     color: white;
     border-radius: 5px;
     cursor: pointer;
+    margin-bottom: 10px;
     width: 100%;
-    margin-bottom: 10px;
-}
-
-.add-player-btn, .clear-all-btn {
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    width: 250px; /* Fixed width for large buttons */
+    max-width: 250px;
 }
 
 .clear-all-btn {
@@ -158,11 +158,30 @@ h1 {
 
 .modal-content {
     background-color: white;
-    padding: 20px;
+    padding: 15px;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
-    width: 90%;
+    max-width: 100%;
+}
+
+.modal-button {
+    padding: 8px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100px; /* Dimensiune fixă pentru butoane */
+    margin: 0; /* Elimină marginile externe care pot cauza nealinierea */
+}
+
+.confirmation-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+.cancel-button {
+    background-color: #007bff;
+    color: white;
 }
 
 .atuu-text {
@@ -175,46 +194,42 @@ h1 {
 }
 
 .modal-content ul li {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
-.modal-content span {
-    margin-left: 5px;
+.empty-message {
+    text-align: center;
+    margin: 15px 0;
 }
 
-.remove-player-btn {
-    padding: 8px;
-    font-size: 14px;
-    border: none;
-    background-color: #dc3545;
-    color: white;
-    border-radius: 5px;
+.empty-message p {
+    font-size: 16px;
+    color: #555;
+}
+
+.remove-player-icon,
+.history-icon,
+.edit-icon {
     cursor: pointer;
-    width: 100%;
-    margin-top: 10px;
+    position: absolute;
+    top: 10px;
+    width: 20px; /* Dimensiune consistentă */
 }
 
-/* Styles for confirmation modal */
-.confirmation-button {
-    padding: 8px; /* Smaller padding */
-    font-size: 14px; /* Smaller font size */
-    border: none;
-    background-color: #dc3545; /* Red for delete */
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%; /* Full width for consistency */
-    margin-top: 10px; /* Space above the button */
+.remove-player-icon {
+    right: 10px;
 }
 
-.cancel-button {
-    padding: 8px; /* Smaller padding */
-    font-size: 14px; /* Smaller font size */
-    border: none;
-    background-color: #007bff; /* Blue for cancel */
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%; /* Full width for consistency */
-    margin-top: 10px; /* Space above the button */
+.history-icon {
+    right: 40px;
+}
+
+.edit-icon {
+    right: 70px; /* Ajustăm distanța față de celelalte iconițe */
+}
+
+@media (min-width: 400px) {
+    .score-input {
+        width: calc(100% - 50px);
+    }
 }

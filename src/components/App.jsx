@@ -1,31 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { FaQuestionCircle, FaTrash, FaStar, FaUndo } from 'react-icons/fa';
+import Confetti from 'react-confetti';
 
 const App = () => {
   const [players, setPlayers] = useState(() => {
     const savedPlayers = localStorage.getItem('players');
-    return savedPlayers ? JSON.parse(savedPlayers) : [{ name: '', score: '', total: 0, history: [], atu: false }];
+    return savedPlayers ? JSON.parse(savedPlayers) : [];
   });
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [newPlayerName, setNewPlayerName] = useState('');
   const [modalIndex, setModalIndex] = useState(null);
-  const [confirmClearModal, setConfirmClearModal] = useState(false); // State for confirm clear modal
+  const [confirmClearModal, setConfirmClearModal] = useState(false);
+  const [confirmRemoveModal, setConfirmRemoveModal] = useState(false);
+  const [removeIndex, setRemoveIndex] = useState(null);
+  const [winnerModalVisible, setWinnerModalVisible] = useState(false);
+  const [winner, setWinner] = useState(null);
+  const [width, setWidth] = useState(window.innerWidth);
+  const [height, setHeight] = useState(window.innerHeight);
+  const [lastModifiedIndex, setLastModifiedIndex] = useState(null); // Indexul jucătorului care a modificat ultimul scor
 
-  // Save players to localStorage on update
   useEffect(() => {
     localStorage.setItem('players', JSON.stringify(players));
   }, [players]);
 
-  const handleNameChange = (index, event) => {
-    const newPlayers = [...players];
-    newPlayers[index].name = event.target.value;
-    setPlayers(newPlayers);
-  };
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+      setHeight(window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleScoreChange = (index, event) => {
     const newPlayers = [...players];
     const value = event.target.value;
-
-    // Allow only numbers and a minus sign for negative numbers
     if (/^-?\d*$/.test(value)) {
       newPlayers[index].score = value;
       setPlayers(newPlayers);
@@ -35,22 +47,22 @@ const App = () => {
   const handleAddScore = (index) => {
     const newPlayers = [...players];
     let scoreToAdd = parseInt(newPlayers[index].score.split(' (')[0], 10) || 0;
-
-    // Add bonus if Atu is active
     if (newPlayers[index].atu) {
       scoreToAdd += 50;
     }
-
-    // Update total
     newPlayers[index].total += scoreToAdd;
-
-    // Add score to history
     newPlayers[index].history.push({ score: scoreToAdd, atu: newPlayers[index].atu });
-
-    // Reset input
     newPlayers[index].score = '';
-    newPlayers[index].atu = false; // Reset Atu after addition
+    newPlayers[index].atu = false;
     setPlayers(newPlayers);
+
+    // Setăm indexul jucătorului care a modificat ultimul scor
+    setLastModifiedIndex(index);
+    
+    // Verificăm câștigătorul doar dacă ultimul scor adăugat nu este de la jucătorul care a modificat scorul
+    if (lastModifiedIndex !== index) {
+      checkForWinner(newPlayers);
+    }
   };
 
   const handleRestore = (index) => {
@@ -65,25 +77,27 @@ const App = () => {
 
   const handleAtu = (index) => {
     const newPlayers = [...players];
-    newPlayers[index].atu = !newPlayers[index].atu; // Toggle Atu
+    newPlayers[index].atu = !newPlayers[index].atu;
     setPlayers(newPlayers);
   };
 
   const addPlayer = () => {
-    setPlayers([...players, { name: '', score: '', total: 0, history: [], atu: false }]);
+    setModalVisible(true);
   };
 
-  const clearAll = () => {
-    setPlayers([{ name: '', score: '', total: 0, history: [], atu: false }]); // Reset players list
-    localStorage.removeItem('players'); // Remove from localStorage
-    setConfirmClearModal(false); // Close the modal
+  const confirmAddPlayer = () => {
+    if (newPlayerName.trim()) {
+      setPlayers([...players, { name: newPlayerName, score: '', total: 0, history: [], atu: false }]);
+      setNewPlayerName('');
+      setModalVisible(false);
+    }
   };
 
-  const openModal = (index) => {
+  const openHistoryModal = (index) => {
     setModalIndex(index);
   };
 
-  const closeModal = () => {
+  const closeHistoryModal = () => {
     setModalIndex(null);
   };
 
@@ -95,57 +109,103 @@ const App = () => {
     setConfirmClearModal(false);
   };
 
-  const removePlayer = (index) => {
-    const newPlayers = players.filter((_, idx) => idx !== index);
+  const openConfirmRemoveModal = (index) => {
+    setConfirmRemoveModal(true);
+    setRemoveIndex(index);
+  };
+
+  const closeConfirmRemoveModal = () => {
+    setConfirmRemoveModal(false);
+    setRemoveIndex(null);
+  };
+
+  const removePlayer = () => {
+    const newPlayers = players.filter((_, idx) => idx !== removeIndex);
     setPlayers(newPlayers);
+    closeConfirmRemoveModal();
+  };
+
+  const clearAllPlayers = () => {
+    setPlayers([]);
+    localStorage.removeItem('players');
+    setConfirmClearModal(false);
+  };
+
+  const checkForWinner = (players) => {
+    const foundWinner = players.find(player => player.total >= 1000);
+    if (foundWinner) {
+      setWinner(foundWinner.name);
+      setWinnerModalVisible(true);
+    }
   };
 
   return (
     <div className="container">
       <h1>Remy Score Tracker</h1>
 
-      {players.map((player, index) => (
-        <div key={index} className="player-input">
-          <input
-            type="text"
-            placeholder="Name"
-            value={player.name}
-            onChange={(event) => handleNameChange(index, event)}
-            className="name-input"
-          />
-          <div className="score-container">
-            <input
-              type="text"
-              placeholder="Score"
-              value={player.score}
-              onChange={(event) => handleScoreChange(index, event)}
-              className="score-input no-spinner"
-            />
-            {player.atu && player.score.length > 0 && (
-              <span className="bonus-text"> ( +50 )</span>
-            )}
-          </div>
-
-          <div className="button-group">
-            <button onClick={() => handleAtu(index)} className={`atuu-btn ${player.atu ? 'active' : ''}`}>
-              ★
-            </button>
-            <button onClick={() => handleRestore(index)} className="restore-btn">Restore</button>
-            <button onClick={() => handleAddScore(index)} className="add-score-btn">Add Score</button>
-          </div>
-
-          <h3>
-            Total: {player.total}
-            {player.atu && <span className="atuu-text"><strong> Atu: Da</strong></span>}
-          </h3>
-
-          <button onClick={() => openModal(index)} className="history-btn">View History</button>
-          <button onClick={() => removePlayer(index)} className="remove-player-btn">Remove Player</button> {/* Remove Player Button */}
+      {players.length === 0 ? (
+        <div className="empty-message">
+          <p>No players added. Please add a player.</p>
         </div>
-      ))}
+      ) : (
+        players.map((player, index) => (
+          <div key={index} className="player-input">
+            <h3>{player.name}</h3>
+            <div className="score-container">
+              <input
+                type="text"
+                placeholder="Score"
+                value={player.score}
+                onChange={(event) => handleScoreChange(index, event)}
+                className="score-input no-spinner"
+              />
+              {player.atu && player.score.length > 0 && (
+                <span className="bonus-text"> ( +50 )</span>
+              )}
+            </div>
+            <div className="button-group">
+              <button onClick={() => handleAtu(index)} className={`atuu-btn ${player.atu ? 'active' : ''}`}>
+                <FaStar style={{ fontSize: '20px' }} />
+              </button>
+              <button onClick={() => handleRestore(index)} className="restore-btn">
+                <FaUndo style={{ fontSize: '20px' }} />
+              </button>
+              <button onClick={() => handleAddScore(index)} className="add-score-btn">Add Score</button>
+            </div>
+            <h3>
+              Total: {player.total}
+              {player.atu && <span className="atuu-text"><strong> Atu: Da</strong></span>}
+            </h3>
+            <FaQuestionCircle className="history-icon" onClick={() => openHistoryModal(index)} size={20} />
+            <FaTrash className="remove-player-icon" onClick={() => openConfirmRemoveModal(index)} size={20} />
+          </div>
+        ))
+      )}
+
+      {players.length > 0 && (
+        <button onClick={openConfirmClearModal} className="clear-all-btn">Clean All</button>
+      )}
 
       <button onClick={addPlayer} className="add-player-btn">Add Player</button>
-      <button onClick={openConfirmClearModal} className="clear-all-btn">Clean All</button> {/* Open confirmation modal */}
+
+      {modalVisible && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Add New Player</h2>
+            <input
+              type="text"
+              placeholder="Enter player name"
+              value={newPlayerName}
+              onChange={(e) => setNewPlayerName(e.target.value)}
+              className="name-input"
+            />
+            <div className="modal-button-group">
+              <button onClick={confirmAddPlayer} className="modal-button add-player-btn">Add Player</button>
+              <button onClick={() => setModalVisible(false)} className="modal-button cancel-button">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {modalIndex !== null && (
         <div className="modal">
@@ -158,18 +218,44 @@ const App = () => {
                 </li>
               ))}
             </ul>
-            <button onClick={closeModal} className="close-modal-btn">Close</button>
+            <button onClick={closeHistoryModal} className="close-modal-btn">Close</button>
           </div>
         </div>
       )}
 
-      {confirmClearModal && ( // Confirm clear modal
+      {confirmClearModal && (
         <div className="modal">
           <div className="modal-content">
             <h2>Confirm Clean All</h2>
             <p>Are you sure you want to clear all players?</p>
-            <button onClick={clearAll} className="clear-all-btn">Yes</button>
-            <button onClick={closeConfirmClearModal} className="close-modal-btn">Cancel</button>
+            <div className="modal-button-group">
+              <button onClick={clearAllPlayers} className="modal-button confirmation-button">Yes</button>
+              <button onClick={closeConfirmClearModal} className="modal-button cancel-button">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {confirmRemoveModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Confirm Remove Player</h2>
+            <p>Are you sure you want to remove this player?</p>
+            <div className="modal-button-group">
+              <button onClick={removePlayer} className="modal-button confirmation-button">Yes</button>
+              <button onClick={closeConfirmRemoveModal} className="modal-button cancel-button">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {winnerModalVisible && (
+        <div className="modal">
+          <div className="modal-content winner-modal">
+            <Confetti width={width} height={height} />
+            <h2>🎉 Felicitări! 🎉</h2>
+            <h3>Câștigător: {winner}</h3>
+            <button onClick={() => setWinnerModalVisible(false)} className="close-modal-btn">Close</button>
           </div>
         </div>
       )}
