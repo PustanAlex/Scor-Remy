@@ -1,0 +1,152 @@
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .player-input {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 250px;
+    margin-bottom: 15px;
+  }
+  
+  .name-input,
+  .score-input {
+    padding: 8px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .score-input {
+    -moz-appearance: textfield;
+  }
+  
+  .score-input::-webkit-outer-spin-button,
+  .score-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .add-score-btn, .restore-btn, .atuu-btn {
+    padding: 8px;
+    font-size: 14px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 30%;
+  }
+  
+  .restore-btn {
+    background-color: #ffc107;
+  }
+  
+  .atuu-btn {
+    background-color: #17a2b8;
+  }
+  
+  .history-btn {
+    padding: 8px;
+    font-size: 14px;
+    border: none;
+    background-color: #17a2b8;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .add-player-btn, .clear-all-btn {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    width: 250px;
+  }
+
+  .clear-all-btn{
+    background-color: red;
+  }
+
+  .add-player-btn{
+    background-color: green;
+  }
+
+  .no-bullets {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  .modal {
+    position: fixed; /* Asigură-te că modalul este fixat pe ecran */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundal semi-transparent */
+    display: flex; /* Folosim flex pentru a centra modalul */
+    justify-content: center; /* Centrare orizontală */
+    align-items: center; /* Centrare verticală */
+    z-index: 1000; /* Asigură-te că modalul este deasupra altor elemente */
+  }
+  
+  .modal-content {
+    background-color: white; /* Fundal alb pentru conținutul modalului */
+    padding: 20px; /* Margine interioară */
+    border-radius: 5px; /* Colțuri rotunjite */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Umbra */
+    max-width: 400px; /* Lățime maximă */
+    width: 90%; /* Lățime de 90% pentru mobil */
+  }
+
+
+  .atuu-text {
+  margin-left: 10px; /* Ajustează distanța dintre total și textul Atuu */
+  font-size: 12px; /* Dimensiune mai mică pentru "Atuu: Da" */
+}
+
+/* Spațiu în modal între scoruri */
+.modal-content ul {
+  padding: 0;
+}
+
+.modal-content ul li {
+  margin-bottom: 10px; /* Spațiu mai mare între scoruri */
+}
+
+/* Mai mult spațiu între "Atuu" și scor în modal */
+.modal-content span {
+  margin-left: 5px; /* Ajustează distanța dintre scor și textul Atuu din modal */
+}
