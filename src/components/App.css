@@ -74,7 +74,7 @@ h1 {
 }
 
 .calculate-scores-btn {
-    background-color: #4CAF50; /* Verde */
+    background-color: #4CAF50;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -82,11 +82,11 @@ h1 {
     font-size: 16px;
     cursor: pointer;
     margin-bottom: 10px;
-  }
-  
-  .calculate-scores-btn:hover {
-    background-color: #45a049; /* Verde mai închis */
-  }
+}
+
+.calculate-scores-btn:hover {
+    background-color: #45a049;
+}
 
 .button-group {
     display: flex;
@@ -106,7 +106,7 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     width: 30%;
-    transition: background-color 0.3s ease; /* Adăugat pentru efect de tranziție */
+    transition: background-color 0.3s ease;
 }
 
 .add-score-btn {
@@ -114,7 +114,7 @@ h1 {
 }
 
 .add-score-btn:hover {
-    background-color: #0056b3; /* Culoare mai închisă la hover */
+    background-color: #0056b3;
 }
 
 .restore-btn {
@@ -122,7 +122,7 @@ h1 {
 }
 
 .restore-btn:hover {
-    background-color: #e0a800; /* Culoare mai închisă la hover */
+    background-color: #e0a800;
 }
 
 .atuu-btn {
@@ -130,14 +130,14 @@ h1 {
 }
 
 .atuu-btn:hover {
-    background-color: #138496; /* Culoare mai închisă la hover */
+    background-color: #138496;
 }
 
 .modal-button-group {
     display: flex;
     flex-direction: row;
-    gap: 10px; /* Spațiu între butoane */
-    justify-content: center; /* Asigură centrul */
+    gap: 10px;
+    justify-content: center;
     align-items: center;
     margin-top: 10px;
 }
@@ -158,7 +158,7 @@ h1 {
     margin-bottom: 10px;
     width: 100%;
     max-width: 250px;
-    transition: background-color 0.3s ease; /* Adăugat pentru efect de tranziție */
+    transition: background-color 0.3s ease;
 }
 
 .clear-all-btn {
@@ -166,7 +166,7 @@ h1 {
 }
 
 .clear-all-btn:hover {
-    background-color: darkred; /* Culoare mai închisă la hover */
+    background-color: darkred;
 }
 
 .add-player-btn {
@@ -174,7 +174,7 @@ h1 {
 }
 
 .add-player-btn:hover {
-    background-color: darkgreen; /* Culoare mai închisă la hover */
+    background-color: darkgreen;
 }
 
 .no-bullets {
@@ -209,8 +209,8 @@ h1 {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    width: 100px; /* Dimensiune fixă pentru butoane */
-    margin: 0; /* Elimină marginile externe care pot cauza nealinierea */
+    width: 100px;
+    margin: 0;
 }
 
 .confirmation-button {
@@ -252,7 +252,7 @@ h1 {
     cursor: pointer;
     position: absolute;
     top: 10px;
-    width: 20px; /* Dimensiune consistentă */
+    width: 20px;
 }
 
 .remove-player-icon {
@@ -264,7 +264,7 @@ h1 {
 }
 
 .edit-icon {
-    right: 70px; /* Ajustăm distanța față de celelalte iconițe */
+    right: 70px;
 }
 
 @media (min-width: 400px) {
@@ -272,7 +272,6 @@ h1 {
         width: calc(100% - 50px);
     }
 }
-
 
 .clean-all-scores-btn {
     padding: 10px;
@@ -284,6 +283,6 @@ h1 {
     margin-bottom: 10px;
     width: 100%;
     max-width: 250px;
-    background-color: #000000; /* Culoare de fundal (roșu) */
-    transition: background-color 0.3s ease; /* Efect de tranziție */
+    background-color: #000000;
+    transition: background-color 0.3s ease;
 }
