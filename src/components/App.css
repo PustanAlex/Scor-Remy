@@ -1,121 +1,113 @@
-
 body, html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-  }
-  
-  .container {
+}
+
+.container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 20px;
-  }
-  
-  h1 {
+}
+
+h1 {
     font-size: 24px;
     text-align: center;
     margin-bottom: 20px;
-  }
-  
-  .player-input {
+}
+
+.player-input {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    max-width: 250px;
+    width: 100%; /* Full width */
+    max-width: 300px; /* Limit max width */
     margin-bottom: 15px;
-  }
+    padding: 15px; /* Increased padding for better spacing */
+    border: 1px solid #ddd; /* Card border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    background-color: #f9f9f9; /* Light background */
+    box-sizing: border-box; /* Ensure padding is included in width */
+}
 
-  .score-container {
+.score-container {
     position: relative;
-    display: inline-block; /* Permite poziționarea elementului span */
-  }
-  
-  .bonus-text {
-    color: red; /* Culoare roșie */
-    position: absolute; /* Poziționează absolut față de container */
-    left: calc(100% + 10px); /* Poziționează lângă input cu 10px distanță */
-    top: 50%; /* Centrare verticală */
-    transform: translateY(-50%); /* Ajustare pentru a fi centrat vertical */
-    font-weight: bold; /* Facem textul mai îndrăzneț */
-    font-size: 0.8em; /* Mărimea fontului mai mică */
-    white-space: nowrap; /* Previne împărțirea pe linii */
-  }
-  
-  .name-input,
-  .score-input {
+    display: inline-block;
+    width: 100%; /* Ensure it takes full width */
+}
+
+.bonus-text {
+    color: red;
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold;
+    font-size: 0.8em;
+    white-space: nowrap;
+}
+
+.name-input,
+.score-input {
     padding: 8px;
     font-size: 14px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 100%;
-  }
-  
-  .score-input {
+    width: 100%; /* Full width to fit card */
+    box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+.score-input {
     -moz-appearance: textfield;
-  }
-  
-  .score-input::-webkit-outer-spin-button,
-  .score-input::-webkit-inner-spin-button {
+}
+
+.score-input::-webkit-outer-spin-button,
+.score-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
-  }
-  
-  .button-group {
+}
+
+.button-group {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
-  }
-  
-  .add-score-btn, .restore-btn, .atuu-btn {
+}
+
+.add-score-btn, .restore-btn, .atuu-btn {
     padding: 8px;
     font-size: 14px;
     border: none;
-    background-color: #007bff;
     color: white;
     border-radius: 5px;
     cursor: pointer;
-    width: 30%;
-  }
-  
-  .restore-btn {
-    background-color: #ffc107;
-  }
-  
-/* Stiluri pentru butonul Atuu */
-.atuu-btn {
-    background-color: #17a2b8; /* Culoarea originală */
-    color: white; /* Culoarea textului */
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease; /* Tranzitie pentru fundal si transformare */
+    width: 30%; /* Flexible button width */
 }
 
-/* Stil pentru butonul activ Atuu */
+.add-score-btn {
+    background-color: #007bff;
+}
+
+.restore-btn {
+    background-color: #ffc107;
+}
+
+.atuu-btn {
+    background-color: #17a2b8;
+}
+
 .atuu-btn.active {
-    background-color: #138496; /* O nuanță mai închisă pentru activare */
-    transform: scale(0.95); /* Mărire ușoară */
+    background-color: #138496;
+    transform: scale(0.95);
 }
 
 .atuu-btn:hover {
-    background-color: #138496; /* Schimbă culoarea la hover */
+    background-color: #138496;
 }
 
-/* Alte stiluri existente */
-.bonus-text {
-    color: red; /* Culoarea textului bonus */
-    font-size: 1rem; /* Font mai mic */
-    padding-left: 10px; /* Padding între număr și bonus */
-    position: absolute; /* Face textul bonus să fie poziționat corect */
-    top: 50%; /* Center vertically */
-    transform: translateY(-50%); /* Center vertically */
-}
-
-  
-  .history-btn {
+.history-btn {
     padding: 8px;
     font-size: 14px;
     border: none;
@@ -125,73 +117,104 @@ body, html {
     cursor: pointer;
     width: 100%;
     margin-bottom: 10px;
-  }
-  
-  .add-player-btn, .clear-all-btn {
+}
+
+.add-player-btn, .clear-all-btn {
     padding: 10px;
     font-size: 16px;
     border: none;
-    background-color: #007bff;
     color: white;
     border-radius: 5px;
     cursor: pointer;
     margin-bottom: 10px;
-    width: 250px;
-  }
+    width: 250px; /* Fixed width for large buttons */
+}
 
-  .clear-all-btn{
+.clear-all-btn {
     background-color: red;
-  }
+}
 
-  .add-player-btn{
+.add-player-btn {
     background-color: green;
-  }
+}
 
-  .no-bullets {
+.no-bullets {
     list-style-type: none;
     padding-left: 0;
-  }
+}
 
-  .modal {
-    position: fixed; /* Asigură-te că modalul este fixat pe ecran */
+.modal {
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Fundal semi-transparent */
-    display: flex; /* Folosim flex pentru a centra modalul */
-    justify-content: center; /* Centrare orizontală */
-    align-items: center; /* Centrare verticală */
-    z-index: 1000; /* Asigură-te că modalul este deasupra altor elemente */
-  }
-  
-  .modal-content {
-    background-color: white; /* Fundal alb pentru conținutul modalului */
-    padding: 20px; /* Margine interioară */
-    border-radius: 5px; /* Colțuri rotunjite */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Umbra */
-    max-width: 400px; /* Lățime maximă */
-    width: 90%; /* Lățime de 90% pentru mobil */
-  }
-
-
-  .atuu-text {
-  margin-left: 10px; /* Ajustează distanța dintre total și textul Atuu */
-  font-size: 12px; /* Dimensiune mai mică pentru "Atuu: Da" */
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
-/* Spațiu în modal între scoruri */
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 90%;
+}
+
+.atuu-text {
+    margin-left: 10px;
+    font-size: 12px;
+}
+
 .modal-content ul {
-  padding: 0;
+    padding: 0;
 }
 
 .modal-content ul li {
-  margin-bottom: 10px; /* Spațiu mai mare între scoruri */
+    margin-bottom: 10px;
 }
 
-/* Mai mult spațiu între "Atuu" și scor în modal */
 .modal-content span {
-  margin-left: 5px; /* Ajustează distanța dintre scor și textul Atuu din modal */
+    margin-left: 5px;
 }
 
+.remove-player-btn {
+    padding: 8px;
+    font-size: 14px;
+    border: none;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
 
+/* Styles for confirmation modal */
+.confirmation-button {
+    padding: 8px; /* Smaller padding */
+    font-size: 14px; /* Smaller font size */
+    border: none;
+    background-color: #dc3545; /* Red for delete */
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%; /* Full width for consistency */
+    margin-top: 10px; /* Space above the button */
+}
+
+.cancel-button {
+    padding: 8px; /* Smaller padding */
+    font-size: 14px; /* Smaller font size */
+    border: none;
+    background-color: #007bff; /* Blue for cancel */
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%; /* Full width for consistency */
+    margin-top: 10px; /* Space above the button */
+}

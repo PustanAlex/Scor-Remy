@@ -4,12 +4,13 @@ import './App.css';
 const App = () => {
   const [players, setPlayers] = useState(() => {
     const savedPlayers = localStorage.getItem('players');
-    return savedPlayers ? JSON.parse(savedPlayers) : [{ name: '', score: '', total: 0, history: [], atuu: false }];
+    return savedPlayers ? JSON.parse(savedPlayers) : [{ name: '', score: '', total: 0, history: [], atu: false }];
   });
 
   const [modalIndex, setModalIndex] = useState(null);
+  const [confirmClearModal, setConfirmClearModal] = useState(false); // State for confirm clear modal
 
-  // Salvăm jucătorii în localStorage la fiecare actualizare
+  // Save players to localStorage on update
   useEffect(() => {
     localStorage.setItem('players', JSON.stringify(players));
   }, [players]);
@@ -22,29 +23,33 @@ const App = () => {
 
   const handleScoreChange = (index, event) => {
     const newPlayers = [...players];
-    newPlayers[index].score = event.target.value; // Setăm scorul în input
-    setPlayers(newPlayers);
+    const value = event.target.value;
+
+    // Allow only numbers and a minus sign for negative numbers
+    if (/^-?\d*$/.test(value)) {
+      newPlayers[index].score = value;
+      setPlayers(newPlayers);
+    }
   };
 
   const handleAddScore = (index) => {
     const newPlayers = [...players];
-    // Obținem scorul fără ( +50 ) din input
     let scoreToAdd = parseInt(newPlayers[index].score.split(' (')[0], 10) || 0;
 
-    // Adăugăm bonusul Atuu dacă este activ
-    if (newPlayers[index].atuu) {
-      scoreToAdd += 50; // Adaugă bonusul
+    // Add bonus if Atu is active
+    if (newPlayers[index].atu) {
+      scoreToAdd += 50;
     }
 
-    // Actualizăm totalul
+    // Update total
     newPlayers[index].total += scoreToAdd;
 
-    // Adăugăm scorul în istoric
-    newPlayers[index].history.push({ score: scoreToAdd, atuu: newPlayers[index].atuu });
+    // Add score to history
+    newPlayers[index].history.push({ score: scoreToAdd, atu: newPlayers[index].atu });
 
-    // Resetează inputul
-    newPlayers[index].score = ''; 
-    newPlayers[index].atuu = false; // Resetăm Atuu după adăugare
+    // Reset input
+    newPlayers[index].score = '';
+    newPlayers[index].atu = false; // Reset Atu after addition
     setPlayers(newPlayers);
   };
 
@@ -58,20 +63,20 @@ const App = () => {
     }
   };
 
-  const handleAtuu = (index) => {
+  const handleAtu = (index) => {
     const newPlayers = [...players];
-    newPlayers[index].atuu = !newPlayers[index].atuu; // Toggle Atuu
-    
+    newPlayers[index].atu = !newPlayers[index].atu; // Toggle Atu
     setPlayers(newPlayers);
   };
 
   const addPlayer = () => {
-    setPlayers([...players, { name: '', score: '', total: 0, history: [], atuu: false }]);
+    setPlayers([...players, { name: '', score: '', total: 0, history: [], atu: false }]);
   };
 
   const clearAll = () => {
-    setPlayers([{ name: '', score: '', total: 0, history: [], atuu: false }]); // Resetăm lista de jucători
-    localStorage.removeItem('players'); // Ștergem din localStorage
+    setPlayers([{ name: '', score: '', total: 0, history: [], atu: false }]); // Reset players list
+    localStorage.removeItem('players'); // Remove from localStorage
+    setConfirmClearModal(false); // Close the modal
   };
 
   const openModal = (index) => {
@@ -80,6 +85,19 @@ const App = () => {
 
   const closeModal = () => {
     setModalIndex(null);
+  };
+
+  const openConfirmClearModal = () => {
+    setConfirmClearModal(true);
+  };
+
+  const closeConfirmClearModal = () => {
+    setConfirmClearModal(false);
+  };
+
+  const removePlayer = (index) => {
+    const newPlayers = players.filter((_, idx) => idx !== index);
+    setPlayers(newPlayers);
   };
 
   return (
@@ -103,14 +121,13 @@ const App = () => {
               onChange={(event) => handleScoreChange(index, event)}
               className="score-input no-spinner"
             />
-            {/* Afișează bonusul doar dacă atuu este activ și scorul are cel puțin un caracter */}
-            {player.atuu && player.score.length > 0 && (
+            {player.atu && player.score.length > 0 && (
               <span className="bonus-text"> ( +50 )</span>
             )}
           </div>
 
           <div className="button-group">
-            <button onClick={() => handleAtuu(index)} className={`atuu-btn ${player.atuu ? 'active' : ''}`}>
+            <button onClick={() => handleAtu(index)} className={`atuu-btn ${player.atu ? 'active' : ''}`}>
               ★
             </button>
             <button onClick={() => handleRestore(index)} className="restore-btn">Restore</button>
@@ -119,15 +136,16 @@ const App = () => {
 
           <h3>
             Total: {player.total}
-            {player.atuu && <span className="atuu-text"><strong> Atuu: Da</strong></span>}
+            {player.atu && <span className="atuu-text"><strong> Atu: Da</strong></span>}
           </h3>
 
           <button onClick={() => openModal(index)} className="history-btn">View History</button>
+          <button onClick={() => removePlayer(index)} className="remove-player-btn">Remove Player</button> {/* Remove Player Button */}
         </div>
       ))}
 
       <button onClick={addPlayer} className="add-player-btn">Add Player</button>
-      <button onClick={clearAll} className="clear-all-btn">Clean All</button>
+      <button onClick={openConfirmClearModal} className="clear-all-btn">Clean All</button> {/* Open confirmation modal */}
 
       {modalIndex !== null && (
         <div className="modal">
@@ -136,11 +154,22 @@ const App = () => {
             <ul className="no-bullets">
               {players[modalIndex].history.map((entry, idx) => (
                 <li key={idx}>
-                  Score: {entry.score} {entry.atuu && <span>Atuu: Da</span>}
+                  Score: {entry.score} {entry.atu && <span>Atu: Da</span>}
                 </li>
               ))}
             </ul>
             <button onClick={closeModal} className="close-modal-btn">Close</button>
+          </div>
+        </div>
+      )}
+
+      {confirmClearModal && ( // Confirm clear modal
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Confirm Clean All</h2>
+            <p>Are you sure you want to clear all players?</p>
+            <button onClick={clearAll} className="clear-all-btn">Yes</button>
+            <button onClick={closeConfirmClearModal} className="close-modal-btn">Cancel</button>
           </div>
         </div>
       )}
