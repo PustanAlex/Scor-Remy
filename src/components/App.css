@@ -59,7 +59,7 @@ h1 {
 }
 
 .name-input {
-    width: 100%; /* Ajustăm lățimea */
+    width: 100%;
 }
 
 .score-input {
@@ -89,18 +89,31 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     width: 30%;
+    transition: background-color 0.3s ease; /* Adăugat pentru efect de tranziție */
 }
 
 .add-score-btn {
     background-color: #007bff;
 }
 
+.add-score-btn:hover {
+    background-color: #0056b3; /* Culoare mai închisă la hover */
+}
+
 .restore-btn {
     background-color: #ffc107;
 }
 
+.restore-btn:hover {
+    background-color: #e0a800; /* Culoare mai închisă la hover */
+}
+
 .atuu-btn {
     background-color: #17a2b8;
+}
+
+.atuu-btn:hover {
+    background-color: #138496; /* Culoare mai închisă la hover */
 }
 
 .modal-button-group {
@@ -128,14 +141,23 @@ h1 {
     margin-bottom: 10px;
     width: 100%;
     max-width: 250px;
+    transition: background-color 0.3s ease; /* Adăugat pentru efect de tranziție */
 }
 
 .clear-all-btn {
     background-color: red;
 }
 
+.clear-all-btn:hover {
+    background-color: darkred; /* Culoare mai închisă la hover */
+}
+
 .add-player-btn {
     background-color: green;
+}
+
+.add-player-btn:hover {
+    background-color: darkgreen; /* Culoare mai închisă la hover */
 }
 
 .no-bullets {
@@ -232,4 +254,19 @@ h1 {
     .score-input {
         width: calc(100% - 50px);
     }
+}
+
+
+.clean-all-scores-btn {
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 250px;
+    background-color: #000000; /* Culoare de fundal (roșu) */
+    transition: background-color 0.3s ease; /* Efect de tranziție */
 }

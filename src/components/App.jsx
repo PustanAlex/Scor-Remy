@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { FaQuestionCircle, FaTrash, FaStar, FaUndo } from 'react-icons/fa';
-import Confetti from 'react-confetti';
 
 const App = () => {
   const [players, setPlayers] = useState(() => {
@@ -15,25 +14,10 @@ const App = () => {
   const [confirmClearModal, setConfirmClearModal] = useState(false);
   const [confirmRemoveModal, setConfirmRemoveModal] = useState(false);
   const [removeIndex, setRemoveIndex] = useState(null);
-  const [winnerModalVisible, setWinnerModalVisible] = useState(false);
-  const [winner, setWinner] = useState(null);
-  const [width, setWidth] = useState(window.innerWidth);
-  const [height, setHeight] = useState(window.innerHeight);
-  const [lastModifiedIndex, setLastModifiedIndex] = useState(null); // Indexul jucătorului care a modificat ultimul scor
 
   useEffect(() => {
     localStorage.setItem('players', JSON.stringify(players));
   }, [players]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWidth(window.innerWidth);
-      setHeight(window.innerHeight);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const handleScoreChange = (index, event) => {
     const newPlayers = [...players];
@@ -55,14 +39,6 @@ const App = () => {
     newPlayers[index].score = '';
     newPlayers[index].atu = false;
     setPlayers(newPlayers);
-
-    // Setăm indexul jucătorului care a modificat ultimul scor
-    setLastModifiedIndex(index);
-    
-    // Verificăm câștigătorul doar dacă ultimul scor adăugat nu este de la jucătorul care a modificat scorul
-    if (lastModifiedIndex !== index) {
-      checkForWinner(newPlayers);
-    }
   };
 
   const handleRestore = (index) => {
@@ -131,12 +107,16 @@ const App = () => {
     setConfirmClearModal(false);
   };
 
-  const checkForWinner = (players) => {
-    const foundWinner = players.find(player => player.total >= 1000);
-    if (foundWinner) {
-      setWinner(foundWinner.name);
-      setWinnerModalVisible(true);
-    }
+  const clearAllScores = () => {
+    const newPlayers = players.map(player => ({
+      ...player,
+      total: 0,
+      history: [],
+      score: '',
+      atu: false
+    }));
+    setPlayers(newPlayers);
+    closeConfirmClearModal();
   };
 
   return (
@@ -182,11 +162,9 @@ const App = () => {
         ))
       )}
 
-      {players.length > 0 && (
-        <button onClick={openConfirmClearModal} className="clear-all-btn">Clean All</button>
-      )}
-
       <button onClick={addPlayer} className="add-player-btn">Add Player</button>
+      <button onClick={openConfirmClearModal} className="clear-all-btn">Clean All</button>
+      <button onClick={clearAllScores} className="clean-all-scores-btn">Clean All Scores</button>
 
       {modalVisible && (
         <div className="modal">
@@ -245,17 +223,6 @@ const App = () => {
               <button onClick={removePlayer} className="modal-button confirmation-button">Yes</button>
               <button onClick={closeConfirmRemoveModal} className="modal-button cancel-button">Cancel</button>
             </div>
-          </div>
-        </div>
-      )}
-
-      {winnerModalVisible && (
-        <div className="modal">
-          <div className="modal-content winner-modal">
-            <Confetti width={width} height={height} />
-            <h2>🎉 Felicitări! 🎉</h2>
-            <h3>Câștigător: {winner}</h3>
-            <button onClick={() => setWinnerModalVisible(false)} className="close-modal-btn">Close</button>
           </div>
         </div>
       )}
