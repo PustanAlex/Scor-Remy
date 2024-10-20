@@ -7,7 +7,7 @@ const App = () => {
     return savedPlayers ? JSON.parse(savedPlayers) : [{ name: '', score: '', total: 0, history: [], atuu: false }];
   });
 
-  const [modalIndex, setModalIndex] = useState(null); // Stochează indexul jucătorului pentru care deschidem modalul
+  const [modalIndex, setModalIndex] = useState(null);
 
   // Salvăm jucătorii în localStorage la fiecare actualizare
   useEffect(() => {
@@ -22,38 +22,46 @@ const App = () => {
 
   const handleScoreChange = (index, event) => {
     const newPlayers = [...players];
-    newPlayers[index].score = event.target.value;
+    newPlayers[index].score = event.target.value; // Setăm scorul în input
     setPlayers(newPlayers);
   };
 
   const handleAddScore = (index) => {
     const newPlayers = [...players];
-    let scoreToAdd = parseInt(newPlayers[index].score, 10);
+    // Obținem scorul fără ( +50 ) din input
+    let scoreToAdd = parseInt(newPlayers[index].score.split(' (')[0], 10) || 0;
 
-    if (isNaN(scoreToAdd)) {
-      scoreToAdd = 0; // Dacă scorul este nevalid, îl setăm la 0
+    // Adăugăm bonusul Atuu dacă este activ
+    if (newPlayers[index].atuu) {
+      scoreToAdd += 50; // Adaugă bonusul
     }
 
+    // Actualizăm totalul
     newPlayers[index].total += scoreToAdd;
-    newPlayers[index].history.push({ score: scoreToAdd, atuu: newPlayers[index].atuu }); // Adăugăm scorul în istoric
-    newPlayers[index].score = ''; // Resetăm inputul
-    newPlayers[index].atuu = false; // Resetăm atuu după adăugare
+
+    // Adăugăm scorul în istoric
+    newPlayers[index].history.push({ score: scoreToAdd, atuu: newPlayers[index].atuu });
+
+    // Resetează inputul
+    newPlayers[index].score = ''; 
+    newPlayers[index].atuu = false; // Resetăm Atuu după adăugare
     setPlayers(newPlayers);
   };
 
   const handleRestore = (index) => {
     const newPlayers = [...players];
     if (newPlayers[index].history.length > 0) {
-      const lastEntry = newPlayers[index].history.pop(); // Scoatem ultimul scor din istoric
-      newPlayers[index].total -= lastEntry.score; // Scădem scorul din total
-      newPlayers[index].score = lastEntry.score.toString(); // Punem ultimul scor înapoi în input
+      const lastEntry = newPlayers[index].history.pop();
+      newPlayers[index].total -= lastEntry.score;
+      newPlayers[index].score = lastEntry.score.toString();
       setPlayers(newPlayers);
     }
   };
 
   const handleAtuu = (index) => {
     const newPlayers = [...players];
-    newPlayers[index].atuu = true; // Marcăm atuu ca activ
+    newPlayers[index].atuu = !newPlayers[index].atuu; // Toggle Atuu
+    
     setPlayers(newPlayers);
   };
 
@@ -67,11 +75,11 @@ const App = () => {
   };
 
   const openModal = (index) => {
-    setModalIndex(index); // Setăm indexul jucătorului pentru care deschidem modalul
+    setModalIndex(index);
   };
 
   const closeModal = () => {
-    setModalIndex(null); // Închidem modalul
+    setModalIndex(null);
   };
 
   return (
@@ -87,23 +95,30 @@ const App = () => {
             onChange={(event) => handleNameChange(index, event)}
             className="name-input"
           />
-          <input
-            type="text"
-            placeholder="Score"
-            value={player.score}
-            onChange={(event) => handleScoreChange(index, event)}
-            className="score-input no-spinner"
-          />
+          <div className="score-container">
+            <input
+              type="text"
+              placeholder="Score"
+              value={player.score}
+              onChange={(event) => handleScoreChange(index, event)}
+              className="score-input no-spinner"
+            />
+            {/* Afișează bonusul doar dacă atuu este activ și scorul are cel puțin un caracter */}
+            {player.atuu && player.score.length > 0 && (
+              <span className="bonus-text"> ( +50 )</span>
+            )}
+          </div>
 
-          {/* Butoanele sunt în linie acum */}
           <div className="button-group">
-            <button onClick={() => handleAtuu(index)} className="atuu-btn">★</button>
+            <button onClick={() => handleAtuu(index)} className={`atuu-btn ${player.atuu ? 'active' : ''}`}>
+              ★
+            </button>
             <button onClick={() => handleRestore(index)} className="restore-btn">Restore</button>
             <button onClick={() => handleAddScore(index)} className="add-score-btn">Add Score</button>
           </div>
 
           <h3>
-            Total: {player.total} 
+            Total: {player.total}
             {player.atuu && <span className="atuu-text"><strong> Atuu: Da</strong></span>}
           </h3>
 
@@ -114,7 +129,6 @@ const App = () => {
       <button onClick={addPlayer} className="add-player-btn">Add Player</button>
       <button onClick={clearAll} className="clear-all-btn">Clean All</button>
 
-      {/* Modal pentru a afișa istoricul */}
       {modalIndex !== null && (
         <div className="modal">
           <div className="modal-content">

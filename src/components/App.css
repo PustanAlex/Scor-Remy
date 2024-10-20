@@ -26,6 +26,22 @@ body, html {
     max-width: 250px;
     margin-bottom: 15px;
   }
+
+  .score-container {
+    position: relative;
+    display: inline-block; /* Permite poziționarea elementului span */
+  }
+  
+  .bonus-text {
+    color: red; /* Culoare roșie */
+    position: absolute; /* Poziționează absolut față de container */
+    left: calc(100% + 10px); /* Poziționează lângă input cu 10px distanță */
+    top: 50%; /* Centrare verticală */
+    transform: translateY(-50%); /* Ajustare pentru a fi centrat vertical */
+    font-weight: bold; /* Facem textul mai îndrăzneț */
+    font-size: 0.8em; /* Mărimea fontului mai mică */
+    white-space: nowrap; /* Previne împărțirea pe linii */
+  }
   
   .name-input,
   .score-input {
@@ -68,9 +84,36 @@ body, html {
     background-color: #ffc107;
   }
   
-  .atuu-btn {
-    background-color: #17a2b8;
-  }
+/* Stiluri pentru butonul Atuu */
+.atuu-btn {
+    background-color: #17a2b8; /* Culoarea originală */
+    color: white; /* Culoarea textului */
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease; /* Tranzitie pentru fundal si transformare */
+}
+
+/* Stil pentru butonul activ Atuu */
+.atuu-btn.active {
+    background-color: #138496; /* O nuanță mai închisă pentru activare */
+    transform: scale(0.95); /* Mărire ușoară */
+}
+
+.atuu-btn:hover {
+    background-color: #138496; /* Schimbă culoarea la hover */
+}
+
+/* Alte stiluri existente */
+.bonus-text {
+    color: red; /* Culoarea textului bonus */
+    font-size: 1rem; /* Font mai mic */
+    padding-left: 10px; /* Padding între număr și bonus */
+    position: absolute; /* Face textul bonus să fie poziționat corect */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Center vertically */
+}
+
   
   .history-btn {
     padding: 8px;
@@ -150,3 +193,5 @@ body, html {
 .modal-content span {
   margin-left: 5px; /* Ajustează distanța dintre scor și textul Atuu din modal */
 }
+
+
